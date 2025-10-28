@@ -8,6 +8,7 @@ import {
 	OptionType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -36,7 +37,7 @@ export const ArticleParamsForm = ({
 	};
 
 	const handleReset = () => {
-		const defaultState = currentArticleState;
+		const defaultState = defaultArticleState;
 		setSelectArticleState(defaultState);
 		setCurrentArticleState(defaultState);
 	};
@@ -60,7 +61,9 @@ export const ArticleParamsForm = ({
 						e.preventDefault();
 						setCurrentArticleState(selectArticleState);
 					}}>
-					<Text size={31}>Задайте параметры</Text>
+					<Text size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 					<Select
 						selected={selectArticleState.fontFamilyOption}
 						options={fontFamilyOptions}
