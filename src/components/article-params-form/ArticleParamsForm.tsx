@@ -6,6 +6,8 @@ import styles from './ArticleParamsForm.module.scss';
 import {
 	ArticleStateType,
 	OptionType,
+	backgroundColors,
+	contentWidthArr,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -13,6 +15,7 @@ import {
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
+import { RadioGroup } from 'src/ui/radio-group';
 
 type ArticleParamsFormProps = {
 	setCurrentArticleState: (param: ArticleStateType) => void;
@@ -32,16 +35,21 @@ export const ArticleParamsForm = ({
 		setSelectArticleState({ ...selectArticleState, [key]: value });
 	};
 
+	const handleReset = () => {
+		const defaultState = currentArticleState;
+		setSelectArticleState(defaultState);
+		setCurrentArticleState(defaultState);
+	};
+
 	useOutsideClickClose({
 		isOpen,
 		rootRef,
 		onClose: () => setIsOpen(false),
 		onChange: setIsOpen,
-		// event: 'mousedown',
 	});
 
 	return (
-		<div>
+		<>
 			<ArrowButton isOpen={isOpen} onClick={setIsOpen} />
 			<aside
 				ref={rootRef}
@@ -52,31 +60,50 @@ export const ArticleParamsForm = ({
 						e.preventDefault();
 						setCurrentArticleState(selectArticleState);
 					}}>
-					<Text size={45}>Hello</Text>
-					<Select
-						selected={selectArticleState.fontColor}
-						options={fontColors}
-						onChange={(option) => handleChange('fontColor', option)}
-						title='Цвет'
-					/>
+					<Text size={31}>Задайте параметры</Text>
 					<Select
 						selected={selectArticleState.fontFamilyOption}
 						options={fontFamilyOptions}
 						onChange={(option) => handleChange('fontFamilyOption', option)}
 						title='Шрифт'
 					/>
-					<Select
+					<RadioGroup
 						selected={selectArticleState.fontSizeOption}
 						options={fontSizeOptions}
 						onChange={(option) => handleChange('fontSizeOption', option)}
-						title='Размер'
+						title='Размер шрифта'
+						name='fontSize'
 					/>
+					<Select
+						selected={selectArticleState.fontColor}
+						options={fontColors}
+						onChange={(option) => handleChange('fontColor', option)}
+						title='Цвет шрифта'
+					/>
+					<Select
+						options={backgroundColors}
+						selected={selectArticleState.backgroundColor}
+						onChange={(option) => handleChange('backgroundColor', option)}
+						title='Цвет фона'
+					/>
+					<Select
+						options={contentWidthArr}
+						selected={selectArticleState.contentWidth}
+						onChange={(option) => handleChange('contentWidth', option)}
+						title='Ширина контента'
+					/>
+
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={handleReset}
+						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
 			</aside>
-		</div>
+		</>
 	);
 };
