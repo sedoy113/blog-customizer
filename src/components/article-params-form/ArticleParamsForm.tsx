@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
@@ -13,7 +13,7 @@ import {
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
-import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+// import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
@@ -45,12 +45,29 @@ export const ArticleParamsForm = ({
 		setCurrentArticleState(defaultState);
 	};
 
-	useOutsideClickClose({
-		isOpen: isFormOpen,
-		rootRef: formContainerRef,
-		onClose: () => setisFormOpen(false),
-		onChange: setisFormOpen,
-	});
+	// useOutsideClickClose({
+	// 	isOpen: isFormOpen,
+	// 	rootRef: formContainerRef,
+	// 	onClose: () => setisFormOpen(false),
+	// 	onChange: setisFormOpen,
+	// });
+	useEffect(() => {
+		if (!isFormOpen) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				formContainerRef.current &&
+				!formContainerRef.current.contains(event.target as Node)
+			) {
+				setisFormOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isFormOpen]);
 
 	return (
 		<>
